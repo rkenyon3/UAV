@@ -1,0 +1,4 @@
+11:48:44.155 [Worker-9] INFO  org.coocox.codb.common.log.ProcessTimeLog - 25`249`2`syncComponent by mcuId client`1052
+11:48:48.452 [Worker-9] INFO  org.coocox.codb.common.log.ProcessTimeLog - 32`2128`getCompAssociatedFromServer`3961
+11:48:48.499 [Worker-9] ERROR org.coocox.codb.common.log.ErrorLog - insert user:UserDTO [id=5772, name=bangbh, level=2, gender=0, introduce=null, nationality=null, qq=null, skype=null, msn=null, email=bangbh@gmail.com, mobile=null, telphone=null, imageUrl=null, score=0, registerTime=null, lastLoginTime=null, ispublic=0, nickname=null, grade=0, exp=0, company=null, province=null, city=null, homepage=null, address=null, zipcode=null, educationId=0, industryId=0, positionId=0, nationalityId=0, year=0, month=0, day=0]
+
