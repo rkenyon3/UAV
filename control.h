@@ -290,8 +290,8 @@ struct PollingParameters
 	OS_EventID DataSemaphoreID;
 };
 
-void runAHRSPolling(void * DataSemParam);
-void runUltrasonicPolling(void * DataSemParam);
+void runAHRSPolling(void * Parameters);
+void runUltrasonicPolling(void * Parameters);
 
 #endif
 

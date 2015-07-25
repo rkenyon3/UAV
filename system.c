@@ -38,7 +38,7 @@ void initialiseSystemTask(void * Parameters)
 	if(returnCode)
 		showErrorCondition(ERR_NO_AHRS_RESPONSE);
 
-	returnCode = AHRSReadRegister(0xAA, 1);
+	returnCode = AHRSReadRegister(0xAC, 1);
 	if(returnCode)
 		showErrorCondition(ERR_NO_AHRS_RESPONSE);
 
@@ -345,7 +345,7 @@ int setUpUART(USART_TypeDef* USARTx, int BaudRate)
 
 	if (USARTx == USART1)
 	{
-		// USART1 AF - note comment in GPIO_PinAFConfig is wrong, GPIO_AF_1 sould be used.
+		// USART1 AF - note comment in GPIO_PinAFConfig is wrong, GPIO_AF_1 should be used.
 		GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);
 		GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1);
 	}
@@ -380,9 +380,15 @@ int setUpUART(USART_TypeDef* USARTx, int BaudRate)
 	// Enable Rx interrupt. Tx interrupt is enabled as needed to prevent continuous interrupting.
 	USART_ITConfig(USARTx, USART_IT_RXNE, ENABLE);
 	if(USARTx == USART1)
+	{
 		NVIC_EnableIRQ(USART1_IRQn);
+		USART1->RDR;
+	}
 	else
+	{
 		NVIC_EnableIRQ(USART2_IRQn);
+		USART2->RDR;
+	}
 
 	USART_Cmd(USARTx, ENABLE);
 

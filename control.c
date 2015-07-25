@@ -258,9 +258,9 @@ int parseControlSerialData(uint8_t *RXData, uint8_t RXLength, Control_Packet *Pa
 
 	return 0;
 }
-void runAHRSPolling(void * DataSemParam)
+void runAHRSPolling(void * Parameters)
 {
-	struct PollingParameters * params = DataSemParam;
+	struct PollingParameters * params = Parameters;
 
 	CoWaitForSingleFlag(params->InitCompleteFlagID,0);
 
@@ -278,21 +278,26 @@ void runAHRSPolling(void * DataSemParam)
 		CoTickDelay(delaymsToTicks(RegisterMap[REGISTER_AHRS_POLLING_PERIOD].Bits));
 	}
 }
-void runUltrasonicPolling(void * DataSemParam)
+void runUltrasonicPolling(void * Parameters)
 {
-	OS_EventID * dataSem = (OS_EventID *)DataSemParam;
 	int returnCode, i;
+
+	struct PollingParameters * params = Parameters;
+
+	CoWaitForSingleFlag(params->InitCompleteFlagID,0);
 
 	for(i = 0; i < 6; i++)
 	{
-		CoPendSem(*dataSem, 0);
+		CoPendSem(params->DataSemaphoreID, 0);
 
 		returnCode = ultrasonicsReadSensor(ULTRASONIC_SENSOR_TOP_ADDRESS + (i << 1));
 		if(returnCode == -1)
 			showErrorCondition(ERR_NO_US_TOP_RESPONSE + 1);
 
-		CoPostSem(*dataSem);
+		CoPostSem(params->DataSemaphoreID);
 	}
+
+	CoTickDelay(delaymsToTicks(RegisterMap[REGISTER_ULTRASONIC_POLLING_PERIOD].Bits));
 }
 void I2C1_IRQHandler(void)
 {

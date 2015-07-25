@@ -4,30 +4,36 @@
 #include "coOS.h"
 #include "system.h"
 
-#define DEFAULT_STACK_SIZE 64
+#define DEFAULT_STACK_SIZE			64
+#define PID_STACK_SIZE				20
+#define INIT_STACK_SIZE				128
+#define SUM_BLOCK_STACK_SIZE		64
+#define AHRS_POLL_STACK_SIZE		128
+#define US_POLL_STACK_SIZE			128
 
-OS_STK InitStack[DEFAULT_STACK_SIZE];
 
-OS_STK SumTaskStack[DEFAULT_STACK_SIZE];
+OS_STK InitStack[INIT_STACK_SIZE];
 
-OS_STK RollRatePIDStack[DEFAULT_STACK_SIZE];
-OS_STK PitchRatePIDStack[DEFAULT_STACK_SIZE];
-OS_STK YawRatePIDStack[DEFAULT_STACK_SIZE];
+OS_STK SumTaskStack[SUM_BLOCK_STACK_SIZE];
 
-OS_STK RollPIDStack[DEFAULT_STACK_SIZE];
-OS_STK PitchPIDStack[DEFAULT_STACK_SIZE];
+OS_STK RollRatePIDStack[PID_STACK_SIZE];
+OS_STK PitchRatePIDStack[PID_STACK_SIZE];
+OS_STK YawRatePIDStack[PID_STACK_SIZE];
 
-OS_STK XVelPIDStack[DEFAULT_STACK_SIZE];
-OS_STK YVelPIDStack[DEFAULT_STACK_SIZE];
-OS_STK ZVelPIDStack[DEFAULT_STACK_SIZE];
+OS_STK RollPIDStack[PID_STACK_SIZE];
+OS_STK PitchPIDStack[PID_STACK_SIZE];
 
-OS_STK XPosPIDStack[DEFAULT_STACK_SIZE];
-OS_STK YPosPIDStack[DEFAULT_STACK_SIZE];
-OS_STK ZPosPIDStack[DEFAULT_STACK_SIZE];
-OS_STK YawPosPIDStack[DEFAULT_STACK_SIZE];
+OS_STK XVelPIDStack[PID_STACK_SIZE];
+OS_STK YVelPIDStack[PID_STACK_SIZE];
+OS_STK ZVelPIDStack[PID_STACK_SIZE];
 
-OS_STK AHRSPollStack[4*DEFAULT_STACK_SIZE];
-OS_STK UltrasonicsStack[DEFAULT_STACK_SIZE];
+OS_STK XPosPIDStack[PID_STACK_SIZE];
+OS_STK YPosPIDStack[PID_STACK_SIZE];
+OS_STK ZPosPIDStack[PID_STACK_SIZE];
+OS_STK YawPosPIDStack[PID_STACK_SIZE];
+
+OS_STK AHRSPollStack[AHRS_POLL_STACK_SIZE];
+OS_STK UltrasonicsStack[US_POLL_STACK_SIZE];
 
 static OS_EventID SemPitchRate;
 static OS_EventID SemRollRate;
@@ -60,7 +66,6 @@ static struct PIDParameters RollRatePIDParameters,	PitchRatePIDParameters,	YawRa
 // Main handles basic set up of the OS, then the initialisation task takes over to complete system set up.
 int main(void)
 {
-	OS_TID initTaskID;
 	CoInitOS();
 
 	SemPitchRate 		= CoCreateSem(1,1,EVENT_SORT_TYPE_PRIO);
@@ -80,29 +85,29 @@ int main(void)
 	InitCompleteFlag	= CoCreateFlag(0,0);
 	TestMotorsFlag		= CoCreateFlag(0,0);
 
-	initTaskID = CoCreateTask(initialiseSystemTask,	&InitTaskParams, 			1, &InitStack[DEFAULT_STACK_SIZE], 	DEFAULT_STACK_SIZE);
+	CoCreateTask(initialiseSystemTask,	&InitTaskParams, 			1,	&InitStack[INIT_STACK_SIZE - 1], 			INIT_STACK_SIZE);
 
-	CoCreateTask(runAHRSPolling, 		&PollingParams,				1,	&AHRSPollStack[DEFAULT_STACK_SIZE], 	DEFAULT_STACK_SIZE);
+	CoCreateTask(runAHRSPolling, 		&PollingParams,				1,	&AHRSPollStack[AHRS_POLL_STACK_SIZE - 1], 	AHRS_POLL_STACK_SIZE);
 
-	CoCreateTask(runUltrasonicPolling,	&PollingParams,				1,	&UltrasonicsStack[DEFAULT_STACK_SIZE], 	DEFAULT_STACK_SIZE);
+	CoCreateTask(runUltrasonicPolling,	&PollingParams,				1,	&UltrasonicsStack[US_POLL_STACK_SIZE - 1], 	US_POLL_STACK_SIZE);
 
-	CoCreateTask(runSummingBlocks, 		&SumTaskParams,				1,	&SumTaskStack[DEFAULT_STACK_SIZE],		DEFAULT_STACK_SIZE);
+	CoCreateTask(runSummingBlocks, 		&SumTaskParams,				1,	&SumTaskStack[SUM_BLOCK_STACK_SIZE - 1],	SUM_BLOCK_STACK_SIZE);
 
-	CoCreateTask(runPID, 				&RollRatePIDParameters, 	2, 	&RollRatePIDStack[DEFAULT_STACK_SIZE], 	DEFAULT_STACK_SIZE);
-	CoCreateTask(runPID, 				&PitchRatePIDParameters,	2, 	&PitchRatePIDStack[DEFAULT_STACK_SIZE], DEFAULT_STACK_SIZE);
-	CoCreateTask(runPID, 				&YawRatePIDParameters, 		2, 	&YawRatePIDStack[DEFAULT_STACK_SIZE], 	DEFAULT_STACK_SIZE);
+	CoCreateTask(runPID, 				&RollRatePIDParameters, 	2, 	&RollRatePIDStack[PID_STACK_SIZE - 1], 		PID_STACK_SIZE);
+	CoCreateTask(runPID, 				&PitchRatePIDParameters,	2, 	&PitchRatePIDStack[PID_STACK_SIZE - 1], 	PID_STACK_SIZE);
+	CoCreateTask(runPID, 				&YawRatePIDParameters, 		2, 	&YawRatePIDStack[PID_STACK_SIZE - 1], 		PID_STACK_SIZE);
 
-	CoCreateTask(runPID, 				&RollPIDParameters, 		3, 	&RollPIDStack[DEFAULT_STACK_SIZE], 		DEFAULT_STACK_SIZE);
-	CoCreateTask(runPID, 				&RollPIDParameters, 		3, 	&PitchPIDStack[DEFAULT_STACK_SIZE],		DEFAULT_STACK_SIZE);
+	CoCreateTask(runPID, 				&RollPIDParameters, 		3, 	&RollPIDStack[PID_STACK_SIZE - 1], 			PID_STACK_SIZE);
+	CoCreateTask(runPID, 				&RollPIDParameters, 		3, 	&PitchPIDStack[PID_STACK_SIZE - 1],			PID_STACK_SIZE);
 
-	CoCreateTask(runPID,		 		&XVelPIDParameters, 		4, 	&XVelPIDStack[DEFAULT_STACK_SIZE], 		DEFAULT_STACK_SIZE);
-	CoCreateTask(runPID,				&YVelPIDParameters, 		4, 	&YVelPIDStack[DEFAULT_STACK_SIZE], 		DEFAULT_STACK_SIZE);
-	CoCreateTask(runPID, 				&ZVelPIDParameters, 		4, 	&ZVelPIDStack[DEFAULT_STACK_SIZE], 		DEFAULT_STACK_SIZE);
+	CoCreateTask(runPID,		 		&XVelPIDParameters, 		4, 	&XVelPIDStack[PID_STACK_SIZE - 1], 			PID_STACK_SIZE);
+	CoCreateTask(runPID,				&YVelPIDParameters, 		4, 	&YVelPIDStack[PID_STACK_SIZE - 1], 			PID_STACK_SIZE);
+	CoCreateTask(runPID, 				&ZVelPIDParameters, 		4, 	&ZVelPIDStack[PID_STACK_SIZE - 1], 			PID_STACK_SIZE);
 
-	CoCreateTask(runPID, 				&XPosPIDParameters, 		5, 	&XPosPIDStack[DEFAULT_STACK_SIZE], 		DEFAULT_STACK_SIZE);
-	CoCreateTask(runPID,		 		&YPosPIDParameters, 		5, 	&YPosPIDStack[DEFAULT_STACK_SIZE], 		DEFAULT_STACK_SIZE);
-	CoCreateTask(runPID,				&ZPosPIDParameters, 		5, 	&ZPosPIDStack[DEFAULT_STACK_SIZE], 		DEFAULT_STACK_SIZE);
-	CoCreateTask(runPID, 				&YawPosPIDParameters, 		5, 	&YawPosPIDStack[DEFAULT_STACK_SIZE],	DEFAULT_STACK_SIZE);
+	CoCreateTask(runPID, 				&XPosPIDParameters, 		5, 	&XPosPIDStack[PID_STACK_SIZE - 1], 			PID_STACK_SIZE);
+	CoCreateTask(runPID,		 		&YPosPIDParameters, 		5, 	&YPosPIDStack[PID_STACK_SIZE - 1], 			PID_STACK_SIZE);
+	CoCreateTask(runPID,				&ZPosPIDParameters, 		5, 	&ZPosPIDStack[PID_STACK_SIZE - 1], 			PID_STACK_SIZE);
+	CoCreateTask(runPID, 				&YawPosPIDParameters, 		5, 	&YawPosPIDStack[PID_STACK_SIZE - 1],		PID_STACK_SIZE);
 
 	RegisterMap[REGISTER_CONTROL_MODE].Bits &= ~CONTROL_MODE_AUTO_MODE;
 

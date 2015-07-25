@@ -182,7 +182,7 @@ int AHRSSetUpSensor(uint32_t BaudRate, uint8_t EulerBroadcastRate, uint8_t Quate
 	// Wait for data to be sent before reconfiguring baud rate
 	while(sendingData);
 
-	setUpUART(USART2, AHRS_COMMS_BAUDRATE);
+	//setUpUART(USART2, AHRS_COMMS_BAUDRATE);
 
 	// Enable listening to responses so that the sensor can respond.
 	respondToIncoming = TRUE;
@@ -688,19 +688,24 @@ void USART2_IRQHandler(void)
 		USART_ClearITPendingBit(USART2, USART_IT_RXNE);
 		USART_ClearFlag(USART2, USART_FLAG_RXNE);
 
-		if(respondToIncoming)
+		//if(respondToIncoming)
+		if(rxIndex < UM7_INCOMING_DATA_BUFFER_SIZE)
 		{
 			incomingData[rxIndex] = USART2->RDR;
 			rxIndex++;
 
-			invalidPacket = AHRS_parse_serial_data(incomingData, rxIndex, &incomingPacket);
-
-			if(!invalidPacket)
-			{
-				rxIndex = 0;
-
-				AHRSProcessNewPacket(&incomingPacket);
-			}
+//			invalidPacket = AHRS_parse_serial_data(incomingData, rxIndex, &incomingPacket);
+//
+//			if(!invalidPacket)
+//			{
+//				rxIndex = 0;
+//
+//				AHRSProcessNewPacket(&incomingPacket);
+//			}
+		}
+		else
+		{
+			rxIndex++;
 		}
 	}
 	// Handle TXE interrupt
@@ -722,5 +727,8 @@ void USART2_IRQHandler(void)
 			bytesSent = 0;
 			sendingData = FALSE;
 		}
+	}
+	else if(USART_GetFlagStatus(USART2, USART_FLAG_IDLE))
+	{
 	}
 }
