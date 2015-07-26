@@ -38,10 +38,9 @@ void initialiseSystemTask(void * Parameters)
 	if(returnCode)
 		showErrorCondition(ERR_NO_AHRS_RESPONSE);
 
-	returnCode = AHRSReadRegister(0xAC, 1);
+	returnCode = AHRSReadRegister(0xAA, 1);
 	if(returnCode)
 		showErrorCondition(ERR_NO_AHRS_RESPONSE);
-
 
 
 

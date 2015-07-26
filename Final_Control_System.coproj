@@ -88,8 +88,8 @@
     <File name="control.c" path="control.c" type="1"/>
     <File name="cmsis_boot" path="" type="2"/>
     <File name="system.c" path="system.c" type="1"/>
-    <File name="cmsis_boot/startup" path="" type="2"/>
     <File name="CoOS/kernel/OsServiceReq.h" path="CoOS/kernel/OsServiceReq.h" type="1"/>
+    <File name="cmsis_boot/startup" path="" type="2"/>
     <File name="stm32_lib/inc/stm32f0xx_tim.h" path="stm32_lib/inc/stm32f0xx_tim.h" type="1"/>
     <File name="CoOS/Document/readme.txt" path="CoOS/Document/readme.txt" type="1"/>
     <File name="cmsis_core" path="" type="2"/>
@@ -110,22 +110,22 @@
     <File name="CoOS/kernel" path="" type="2"/>
     <File name="CoOS/kernel/time.c" path="CoOS/kernel/time.c" type="1"/>
     <File name="ahrsInterface.c" path="ahrsInterface.c" type="1"/>
-    <File name="PID.c" path="PID.c" type="1"/>
     <File name="system.h" path="system.h" type="1"/>
+    <File name="PID.c" path="PID.c" type="1"/>
     <File name="CoOS/portable/OsArch.h" path="CoOS/portable/OsArch.h" type="1"/>
     <File name="CoOS/kernel/OsCore.h" path="CoOS/kernel/OsCore.h" type="1"/>
     <File name="CoOS/kernel/OsMutex.h" path="CoOS/kernel/OsMutex.h" type="1"/>
     <File name="stm32_lib/src/stm32f0xx_tim.c" path="stm32_lib/src/stm32f0xx_tim.c" type="1"/>
+    <File name="stm32_lib/src/stm32f0xx_rcc.c" path="stm32_lib/src/stm32f0xx_rcc.c" type="1"/>
     <File name="CoOS/kernel/OsTimer.h" path="CoOS/kernel/OsTimer.h" type="1"/>
     <File name="CoOS/kernel/sem.c" path="CoOS/kernel/sem.c" type="1"/>
-    <File name="stm32_lib/src/stm32f0xx_rcc.c" path="stm32_lib/src/stm32f0xx_rcc.c" type="1"/>
-    <File name="CoOS/kernel/OsQueue.h" path="CoOS/kernel/OsQueue.h" type="1"/>
     <File name="CoOS/kernel/CoOS.h" path="CoOS/kernel/CoOS.h" type="1"/>
-    <File name="stm32_lib/src/stm32f0xx_i2c.c" path="stm32_lib/src/stm32f0xx_i2c.c" type="1"/>
+    <File name="CoOS/kernel/OsQueue.h" path="CoOS/kernel/OsQueue.h" type="1"/>
     <File name="CoOS/kernel/OsEvent.h" path="CoOS/kernel/OsEvent.h" type="1"/>
+    <File name="stm32_lib/src/stm32f0xx_i2c.c" path="stm32_lib/src/stm32f0xx_i2c.c" type="1"/>
     <File name="stm32_lib/src/stm32f0xx_usart.c" path="stm32_lib/src/stm32f0xx_usart.c" type="1"/>
-    <File name="cmsis_boot/stm32f0xx_conf.h" path="cmsis_boot/stm32f0xx_conf.h" type="1"/>
     <File name="cmsis_boot/startup/startup_stm32f0xx.s" path="cmsis_boot/startup/startup_stm32f0xx.s" type="1"/>
+    <File name="cmsis_boot/stm32f0xx_conf.h" path="cmsis_boot/stm32f0xx_conf.h" type="1"/>
     <File name="CoOS/kernel/mutex.c" path="CoOS/kernel/mutex.c" type="1"/>
     <File name="CoOS/portable/arch.c" path="CoOS/portable/arch.c" type="1"/>
     <File name="PID.h" path="PID.h" type="1"/>
@@ -151,8 +151,8 @@
     <File name="CoOS/portable" path="" type="2"/>
     <File name="CoOS/kernel/OsMM.h" path="CoOS/kernel/OsMM.h" type="1"/>
     <File name="CoOS/kernel/hook.c" path="CoOS/kernel/hook.c" type="1"/>
-    <File name="ahrsInterface.h" path="ahrsInterface.h" type="1"/>
     <File name="stm32_lib/src/stm32f0xx_gpio.c" path="stm32_lib/src/stm32f0xx_gpio.c" type="1"/>
+    <File name="ahrsInterface.h" path="ahrsInterface.h" type="1"/>
     <File name="CoOS/kernel/coocox.h" path="CoOS/kernel/coocox.h" type="1"/>
     <File name="main.c" path="main.c" type="1"/>
     <File name="stm32_lib/src" path="" type="2"/>

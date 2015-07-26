@@ -694,14 +694,14 @@ void USART2_IRQHandler(void)
 			incomingData[rxIndex] = USART2->RDR;
 			rxIndex++;
 
-//			invalidPacket = AHRS_parse_serial_data(incomingData, rxIndex, &incomingPacket);
-//
-//			if(!invalidPacket)
-//			{
-//				rxIndex = 0;
-//
-//				AHRSProcessNewPacket(&incomingPacket);
-//			}
+			invalidPacket = AHRS_parse_serial_data(incomingData, rxIndex, &incomingPacket);
+
+			if(!invalidPacket)
+			{
+				rxIndex = 0;
+
+				AHRSProcessNewPacket(&incomingPacket);
+			}
 		}
 		else
 		{
